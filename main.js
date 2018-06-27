@@ -20,8 +20,14 @@ for(var i=0;i<count;i++){
     yspeed:speed*Math.sin(angle)
   });
 }
-document.addEventListener('click',function(event){  
-  for(var i=0;i<10;i++){
+document.addEventListener('click',function(event){
+  var newparticles;
+  var l=particles.length;
+  if(l>250)newparticles=1;
+  else if(l>200)newparticles=2;
+  else if(l>150)newparticles=5;
+  else newparticles=10;
+  for(var i=0;i<newparticles;i++){
     var speed=Math.random()*count/25+1;
     var angle=Math.random()*2*Math.PI;  
     particles.push({
@@ -58,6 +64,8 @@ function particleAnimation(){
   ctx.fillStyle=gradient;
   ctx.fillRect(0,0,w,h);
   var l=particles.length;
+  console.log(l);
+  
   for(var i=0;i<l;i++){
     drawParticle(particles[i]);
     particles[i].x-=-particles[i].xspeed;
