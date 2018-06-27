@@ -72,6 +72,15 @@ function particleAnimation(){
       }
     }
   }
+  l=particles.length;
+  for(var i=0;i<l;i++){
+    for(var j=0;j<l;j++){
+      if(i==j)continue;
+      if(Math.sqrt(Math.pow(particles[i].x-particles[j].x,2)+Math.pow(particles[i].y-particles[j].y,2))<Math.min(w,h)/5){
+        joinParticle(particles[i],particles[j]);
+      }
+    }
+  }
   requestAnimationFrame(particleAnimation);
 }
 
@@ -87,5 +96,18 @@ function drawParticle(p){
   ctx.fillStyle='rgba(255,255,255,1)';
   ctx.arc(p.x,p.y,1.5,0,2*Math.PI);
   ctx.fill();
+  ctx.restore();
+}
+
+//Join Particles
+
+function joinParticle(p1,p2){
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(p1.x,p1.y);
+  ctx.lineTo(p2.x,p2.y);
+  ctx.lineWidth=0.2;
+  ctx.strokeStyle='rgba(255,255,255,0.5)';
+  ctx.stroke();
   ctx.restore();
 }
