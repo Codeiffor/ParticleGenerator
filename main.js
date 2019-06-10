@@ -1,32 +1,47 @@
 canvas=document.querySelector('#particles');
-var w=canvas.attributes.width.value=document.body.clientWidth;
-var h=canvas.attributes.height.value=document.documentElement.clientHeight;
+window.onload = start;
+window.onresize = start;
+var w;
+var h;
+var gradient;
+var count;
+var particles;
+var ctx=canvas.getContext('2d');
+var animationFrame;
+function start () {
+  w=canvas.attributes.width.value=document.body.clientWidth;
+  h=canvas.attributes.height.value=document.documentElement.clientHeight;
+  gradient=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,w/2);
+  gradient.addColorStop(0,'rgba(0, 20, 53,0.5)');
+  gradient.addColorStop(1,'rgba(0, 15, 40,0.1)');
+  //particles' configuration
 
-ctx=canvas.getContext('2d');
-var gradient=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,w/2);
-gradient.addColorStop(0,'rgba(0, 20, 53,0.5)');
-gradient.addColorStop(1,'rgba(0, 15, 40,0.1)');
-//particles' configuration
+  particles=[];
+  count=Math.floor(Math.sqrt(w*h)/20);
+  for(var i=0;i<count;i++){
+    var speed=Math.random()*count/25+1;
+    var angle=Math.random()*2*Math.PI;  
+    particles.push({
+      x:Math.random()*w,
+      y:Math.random()*h,
+      xspeed:speed*Math.cos(angle),
+      yspeed:speed*Math.sin(angle)
+    });
+  }
 
-particles=[];
-var count=Math.floor(Math.sqrt(w*h)/20);
-for(var i=0;i<count;i++){
-  var speed=Math.random()*count/25+1;
-  var angle=Math.random()*2*Math.PI;  
-  particles.push({
-    x:Math.random()*w,
-    y:Math.random()*h,
-    xspeed:speed*Math.cos(angle),
-    yspeed:speed*Math.sin(angle)
-  });
+  //particle animation
+  cancelAnimationFrame(animationFrame);
+  particleAnimation();
 }
+
 document.addEventListener('click',function(event){
   var newparticles;
   var l=particles.length;
-  if(l>250)newparticles=1;
-  else if(l>200)newparticles=2;
-  else if(l>150)newparticles=5;
-  else newparticles=10;
+  if(l>150)newparticles=1;
+  else if(l>125)newparticles=2;
+  else if(l>100)newparticles=3;
+  else if(l>75)newparticles=5;
+  else newparticles=7;
   for(var i=0;i<newparticles;i++){
     var speed=Math.random()*count/25+1;
     var angle=Math.random()*2*Math.PI;  
@@ -54,9 +69,6 @@ function particleRecovery(i){
   }
 }
 
-//particle animation
-
-particleAnimation();
 function particleAnimation(){
   ctx.clearRect(0,0,w,h);
   ctx.fillStyle='black';
@@ -64,7 +76,6 @@ function particleAnimation(){
   ctx.fillStyle=gradient;
   ctx.fillRect(0,0,w,h);
   var l=particles.length;
-  console.log(l);
   
   for(var i=0;i<l;i++){
     drawParticle(particles[i]);
@@ -89,7 +100,7 @@ function particleAnimation(){
       }
     }
   }
-  requestAnimationFrame(particleAnimation);
+  animationFrame = requestAnimationFrame(particleAnimation);
 }
 
 //draw particles
